@@ -41,8 +41,7 @@ const Login: React.FC = () => {
       history.push(urlParams.get('redirect') || '/');
       return;
     } catch (error: any) {
-      const defaultLoginFailureMessage = `登录失败，${error.message}`;
-      message.error(defaultLoginFailureMessage);
+      
     }
   };
 
@@ -65,7 +64,7 @@ const Login: React.FC = () => {
             maxWidth: '75vw',
           }}
           logo={<img alt="logo" style={{ height: '100%' }} src="/logo.svg" />}
-          title="前端万用模板"
+          title="项目初始化"
           subTitle={'快速开发属于自己的前端项目'}
           initialValues={{
             autoLogin: true,

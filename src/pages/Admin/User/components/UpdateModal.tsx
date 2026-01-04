@@ -2,8 +2,8 @@ import { updateUser } from '@/services/api';
 import type { UserVO, UserUpdateAO, UserAddAO } from '@/services/types';
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import '@umijs/max';
-import { message, Modal } from 'antd';
-import React from 'react';
+import { Button, message, Modal } from 'antd';
+import React, { useMemo } from 'react';
 
 interface Props {
   oldData?: UserVO;
@@ -40,6 +40,11 @@ const handleUpdate = async (fields: UserUpdateAO) => {
 const UpdateModal: React.FC<Props> = (props) => {
   const { oldData, visible, columns, onSubmit, onCancel } = props;
 
+  // 过滤掉 userAccount 字段，不允许修改账号
+  const formColumns = useMemo(() => {
+    return columns.filter((col) => col.dataIndex !== 'userAccount');
+  }, [columns]);
+
   if (!oldData) {
     return <></>;
   }
@@ -55,8 +60,9 @@ const UpdateModal: React.FC<Props> = (props) => {
       }}
     >
       <ProTable
+        key={oldData.id}
         type="form"
-        columns={columns}
+        columns={formColumns}
         form={{
           initialValues: oldData,
         }}
@@ -68,6 +74,18 @@ const UpdateModal: React.FC<Props> = (props) => {
           if (success) {
             onSubmit?.(values);
           }
+        }}
+        submitter={{
+          render: (props, defaultDoms) => {
+            return [
+              <Button key="cancel" onClick={() => onCancel?.()}>
+                取消
+              </Button>,
+              <Button key="submit" type="primary" onClick={() => props.submit?.()}>
+                确定
+              </Button>,
+            ];
+          },
         }}
       />
     </Modal>

@@ -28,7 +28,8 @@ export interface UserVO {
   userAvatar?: string;
   userProfile?: string;
   userRole?: string;
-  createTime?: string;
+  createTime?: number;
+  updateTime?: number;
 }
 
 export interface UserLoginAO {

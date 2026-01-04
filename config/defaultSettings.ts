@@ -15,7 +15,7 @@ const Settings: ProLayoutProps & {
   fixedHeader: false,
   fixSiderbar: true,
   colorWeak: false,
-  title: '前端万用模板',
+  title: 'ant-design-pro',
   pwa: true,
   iconfontUrl: '',
   token: {

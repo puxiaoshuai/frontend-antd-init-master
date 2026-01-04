@@ -73,7 +73,7 @@ export default defineConfig({
    * @name layout 插件
    * @doc https://umijs.org/docs/max/layout-menu
    */
-  title: '前端万用模板',
+  title: 'Ant Design Pro',
   layout: {
     locale: true,
     // 开启权限控制，菜单会根据 access 权限过滤

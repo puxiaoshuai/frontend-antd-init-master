@@ -2,11 +2,12 @@ import CreateModal from '@/pages/Admin/User/components/CreateModal';
 import UpdateModal from '@/pages/Admin/User/components/UpdateModal';
 import { deleteUser, listUserByPage } from '@/services/api';
 import type { UserVO } from '@/services/types';
+import { DateFormatUtils } from '@/utils/dateFormat';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, message, Space, Typography } from 'antd';
+import { Button, message, Modal, Space, Typography } from 'antd';
 import React, { useRef, useState } from 'react';
 
 /**
@@ -29,19 +30,26 @@ const UserAdminPage: React.FC = () => {
    * @param row
    */
   const handleDelete = async (row: UserVO) => {
-    const hide = message.loading('正在删除');
-    if (!row.id) return true;
-    try {
-      await deleteUser(row.id);
-      hide();
-      message.success('删除成功');
-      actionRef?.current?.reload();
-      return true;
-    } catch (error: any) {
-      hide();
-      message.error('删除失败，' + error.message);
-      return false;
-    }
+    Modal.confirm({
+      title: '确认删除',
+      content: `确定要删除用户 "${row.userName || row.userAccount}" 吗？`,
+      okText: '确定',
+      cancelText: '取消',
+      okButtonProps: { danger: true },
+      onOk: async () => {
+        const hide = message.loading('正在删除');
+        if (!row.id) return;
+        try {
+          await deleteUser(row.id);
+          hide();
+          message.success('删除成功');
+          actionRef?.current?.reload();
+        } catch (error: any) {
+          hide();
+          message.error('删除失败，' + error.message);
+        }
+      },
+    });
   };
 
   /**
@@ -91,17 +99,19 @@ const UserAdminPage: React.FC = () => {
       title: '创建时间',
       sorter: true,
       dataIndex: 'createTime',
-      valueType: 'dateTime',
+      valueType: 'text',
       hideInSearch: true,
       hideInForm: true,
+      render: (_, record) => DateFormatUtils.formatTimestamp(record.createTime),
     },
     {
       title: '更新时间',
       sorter: true,
       dataIndex: 'updateTime',
-      valueType: 'dateTime',
+      valueType: 'text',
       hideInSearch: true,
       hideInForm: true,
+      render: (_, record) => DateFormatUtils.formatTimestamp(record.updateTime),
     },
     {
       title: '操作',
@@ -157,7 +167,7 @@ const UserAdminPage: React.FC = () => {
 
           return {
             success: true,
-            data: data?.list || [],
+            data: data || [],
             total: Number(data?.total) || 0,
           };
         }}

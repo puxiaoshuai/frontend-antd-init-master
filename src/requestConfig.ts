@@ -113,8 +113,6 @@ export const requestConfig: RequestConfig = {
           message.error('请求地址不存在');
         } else if (status === 500) {
           message.error('服务器错误');
-        } else {
-          message.error(`请求错误 ${status}`);
         }
         throw error;
       }
