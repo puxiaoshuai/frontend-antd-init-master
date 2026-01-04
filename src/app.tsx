@@ -1,5 +1,5 @@
 import Footer from '@/components/Footer';
-import { getLoginUserUsingGet } from '@/services/backend/userController';
+import { getLoginUser } from '@/services/api';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
@@ -19,16 +19,20 @@ export async function getInitialState(): Promise<InitialState> {
   const { location } = history;
   if (location.pathname !== loginPath) {
     try {
-      const res = await getLoginUserUsingGet();
-      initialState.currentUser = res.data;
+      const user = await getLoginUser();
+      console.log('登录用户信息:', user);
+      console.log('用户角色:', user?.userRole);
+      initialState.currentUser = user;
     } catch (error: any) {
       // 如果未登录
+      console.log('未登录或获取用户信息失败:', error);
     }
 
-    // 模拟登录用户
-    // const mockUser: API.LoginUserVO = {
+    // 模拟登录用户（调试用）
+    // const mockUser: LoginUserVO = {
+    //   id: 1,
     //   userAvatar: 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png',
-    //   userName: 'yupi',
+    //   userName: 'admin',
     //   userRole: 'admin',
     // };
     // initialState.currentUser = mockUser;

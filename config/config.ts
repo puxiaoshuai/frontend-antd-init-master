@@ -76,6 +76,8 @@ export default defineConfig({
   title: '前端万用模板',
   layout: {
     locale: true,
+    // 开启权限控制，菜单会根据 access 权限过滤
+    access: true,
     ...defaultSettings,
   },
   /**
@@ -121,18 +123,14 @@ export default defineConfig({
   ],
   //================ pro 插件配置 =================
   presets: ['umi-presets-pro'],
-  /**
-   * @name openAPI 插件的配置
-   * @description 基于 openapi 的规范生成serve 和mock，能减少很多样板代码
-   * @doc https://pro.ant.design/zh-cn/docs/openapi/
-   */
-  openAPI: [
-    {
-      requestLibPath: "import { request } from '@umijs/max'",
-      schemaPath: 'http://localhost:8101/api/v2/api-docs',
-      projectName: 'backend',
-    },
-  ],
+  // 已移除 openAPI 配置，改用手动封装的网络请求
+  // openAPI: [
+  //   {
+  //     requestLibPath: "import { request } from '@umijs/max'",
+  //     schemaPath: 'http://localhost:8101/api/v2/api-docs',
+  //     projectName: 'backend',
+  //   },
+  // ],
   mfsu: {
     strategy: 'normal',
   },

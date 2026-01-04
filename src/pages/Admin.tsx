@@ -8,7 +8,7 @@ const Admin: React.FC = () => {
     <PageContainer content={' 这个页面只有 admin 权限才能查看'}>
       <Card>
         <Alert
-          message={'更快更强的重型组件，已经发布。'}
+          title={'更快更强的重型组件，已经发布。'}
           type="success"
           showIcon
           banner

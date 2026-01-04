@@ -1,4 +1,4 @@
-import { userLogoutUsingPost } from '@/services/backend/userController';
+import { logout } from '@/services/api';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
 import { Avatar, Button, Space } from 'antd';
@@ -18,7 +18,7 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
    * 退出登录，并且将当前的 url 保存
    */
   const loginOut = async () => {
-    await userLogoutUsingPost();
+    await logout();
     const { search, pathname } = window.location;
     const urlParams = new URL(window.location.href).searchParams;
     /** 此方法会跳转到 redirect 参数所在的位置 */

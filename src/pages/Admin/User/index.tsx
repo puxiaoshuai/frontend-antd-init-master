@@ -1,6 +1,7 @@
 import CreateModal from '@/pages/Admin/User/components/CreateModal';
 import UpdateModal from '@/pages/Admin/User/components/UpdateModal';
-import { deleteUserUsingPost, listUserByPageUsingPost } from '@/services/backend/userController';
+import { deleteUser, listUserByPage } from '@/services/api';
+import type { UserVO } from '@/services/types';
 import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
@@ -20,20 +21,18 @@ const UserAdminPage: React.FC = () => {
   const [updateModalVisible, setUpdateModalVisible] = useState<boolean>(false);
   const actionRef = useRef<ActionType>();
   // 当前用户点击的数据
-  const [currentRow, setCurrentRow] = useState<API.User>();
+  const [currentRow, setCurrentRow] = useState<UserVO>();
 
   /**
    * 删除节点
    *
    * @param row
    */
-  const handleDelete = async (row: API.User) => {
+  const handleDelete = async (row: UserVO) => {
     const hide = message.loading('正在删除');
-    if (!row) return true;
+    if (!row.id) return true;
     try {
-      await deleteUserUsingPost({
-        id: row.id as any,
-      });
+      await deleteUser(row.id);
       hide();
       message.success('删除成功');
       actionRef?.current?.reload();
@@ -48,7 +47,7 @@ const UserAdminPage: React.FC = () => {
   /**
    * 表格列配置
    */
-  const columns: ProColumns<API.User>[] = [
+  const columns: ProColumns<UserVO>[] = [
     {
       title: 'id',
       dataIndex: 'id',
@@ -69,9 +68,6 @@ const UserAdminPage: React.FC = () => {
       title: '头像',
       dataIndex: 'userAvatar',
       valueType: 'image',
-      fieldProps: {
-        width: 64,
-      },
       hideInSearch: true,
     },
     {
@@ -130,7 +126,7 @@ const UserAdminPage: React.FC = () => {
   ];
   return (
     <PageContainer>
-      <ProTable<API.User>
+      <ProTable<UserVO>
         headerTitle={'查询表格'}
         actionRef={actionRef}
         rowKey="key"
@@ -152,16 +148,16 @@ const UserAdminPage: React.FC = () => {
           const sortField = Object.keys(sort)?.[0];
           const sortOrder = sort?.[sortField] ?? undefined;
 
-          const { data, code } = await listUserByPageUsingPost({
+          const data = await listUserByPage({
             ...params,
             sortField,
             sortOrder,
             ...filter,
-          } as API.UserQueryRequest);
+          });
 
           return {
-            success: code === 0,
-            data: data?.records || [],
+            success: true,
+            data: data?.list || [],
             total: Number(data?.total) || 0,
           };
         }}

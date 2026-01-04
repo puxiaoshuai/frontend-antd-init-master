@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
-import { userRegisterUsingPost } from '@/services/backend/userController';
+import { register } from '@/services/api';
+import type { UserRegisterAO } from '@/services/types';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
@@ -31,7 +32,7 @@ const UserRegisterPage: React.FC = () => {
    * 提交注册
    * @param values
    */
-  const handleSubmit = async (values: API.UserRegisterRequest) => {
+  const handleSubmit = async (values: UserRegisterAO) => {
     // 前端校验
     // 1. 判断密码是否一致
     const { userPassword, checkPassword } = values;
@@ -42,9 +43,7 @@ const UserRegisterPage: React.FC = () => {
 
     try {
       // 注册
-      await userRegisterUsingPost({
-        ...values,
-      });
+      await register(values);
 
       const defaultLoginSuccessMessage = '注册成功！';
       message.success(defaultLoginSuccessMessage);
@@ -86,7 +85,7 @@ const UserRegisterPage: React.FC = () => {
             },
           }}
           onFinish={async (values) => {
-            await handleSubmit(values as API.UserLoginRequest);
+            await handleSubmit(values as UserRegisterAO);
           }}
         >
           <Tabs

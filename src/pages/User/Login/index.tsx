@@ -1,5 +1,6 @@
 import Footer from '@/components/Footer';
-import { userLoginUsingPost } from '@/services/backend/userController';
+import { login } from '@/services/api';
+import type { UserLoginAO } from '@/services/types';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginForm, ProFormText } from '@ant-design/pro-components';
 import { useEmotionCss } from '@ant-design/use-emotion-css';
@@ -24,19 +25,17 @@ const Login: React.FC = () => {
     };
   });
 
-  const handleSubmit = async (values: API.UserLoginRequest) => {
+  const handleSubmit = async (values: UserLoginAO) => {
     try {
       // 登录
-      const res = await userLoginUsingPost({
-        ...values,
-      });
+      const user = await login(values);
 
       const defaultLoginSuccessMessage = '登录成功！';
       message.success(defaultLoginSuccessMessage);
       // 保存已登录用户信息
       setInitialState({
         ...initialState,
-        currentUser: res.data,
+        currentUser: user,
       });
       const urlParams = new URL(window.location.href).searchParams;
       history.push(urlParams.get('redirect') || '/');
@@ -72,7 +71,7 @@ const Login: React.FC = () => {
             autoLogin: true,
           }}
           onFinish={async (values) => {
-            await handleSubmit(values as API.UserLoginRequest);
+            await handleSubmit(values as UserLoginAO);
           }}
         >
           <Tabs
